@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         long end = mCalendar.getTime().getTime();
 
                         contentValues.put(CalendarContract.Events.DTSTART, start);
+                        contentValues.put(CalendarContract.Events.RRULE, "FREQ=WEEKLY;COUNT=12;WKST=SU;BYDAY=MO,TU,WE,TH,FR,SA");
                         contentValues.put(CalendarContract.Events.DTEND, end);
                         contentValues.put(CalendarContract.Events.HAS_ALARM, true);//设置有闹钟提醒
                         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, "Asia/Shanghai");  //这个是时区，必须有，
@@ -152,25 +153,25 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.delEventOne).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //// TODO: 17/3/22 三星崩溃的解决
-                ContentValues contentValues = new ContentValues();
-                Calendar mCalendar = Calendar.getInstance();
-                mCalendar.setTimeInMillis(System.currentTimeMillis());
-                mCalendar.set(Calendar.HOUR_OF_DAY, 7);
-                mCalendar.set(Calendar.MINUTE, 1);
-                long start = mCalendar.getTime().getTime();
-                mCalendar.add(Calendar.HOUR_OF_DAY, 8);
-                long end = mCalendar.getTime().getTime();
+//                //// TODO: 17/3/22 三星崩溃的解决
+//                ContentValues contentValues = new ContentValues();
+//                Calendar mCalendar = Calendar.getInstance();
+//                mCalendar.setTimeInMillis(System.currentTimeMillis());
+//                mCalendar.set(Calendar.HOUR_OF_DAY, 7);
+//                mCalendar.set(Calendar.MINUTE, 1);
+//                long start = mCalendar.getTime().getTime();
+//                mCalendar.add(Calendar.HOUR_OF_DAY, 8);
+//                long end = mCalendar.getTime().getTime();
+//
+//                contentValues.put(CalendarContract.Events.DTSTART, start);
+//                contentValues.put(CalendarContract.Events.DTEND, end);
+//                int num = getContentResolver().update(ContentUris.withAppendedId(Uri.parse(CALANDER_EVENT_URL), 1), contentValues, null, null);
+//                Toast.makeText(MainActivity.this, num < 0 ? "更新失败" : "更新了: " + alarmTitle[0], Toast.LENGTH_LONG).show();
 
-                contentValues.put(CalendarContract.Events.DTSTART, start);
-                contentValues.put(CalendarContract.Events.DTEND, end);
-                int num = getContentResolver().update(ContentUris.withAppendedId(Uri.parse(CALANDER_EVENT_URL), 1), contentValues, null, null);
-                Toast.makeText(MainActivity.this, num < 0 ? "更新失败" : "更新了: " + alarmTitle[0], Toast.LENGTH_LONG).show();
-
-//                //删除事件
-//                int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==1", null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
-//                //可以令_id=你添加账户的id，以此删除你添加的账户
-//                Toast.makeText(MainActivity.this, rownum < 0 ? "没有可删除的" : "删除了: " + alarmTitle[0], Toast.LENGTH_LONG).show();
+                //删除事件
+                int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==1", null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
+                //可以令_id=你添加账户的id，以此删除你添加的账户
+                Toast.makeText(MainActivity.this, rownum < 0 ? "没有可删除的" : "删除了: " + alarmTitle[0], Toast.LENGTH_LONG).show();
             }
         });
         findViewById(R.id.delEvenTwo).setOnClickListener(new View.OnClickListener() {
