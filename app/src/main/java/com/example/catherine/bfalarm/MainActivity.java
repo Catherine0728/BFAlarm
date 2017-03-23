@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.initButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                initCalendars();
                 initAcount(true);
             }
         });
@@ -255,6 +254,8 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
     private void insertAcount() {
+        initDefaultCalendars();
+
         //添加日历账户
         for (int i = 0; i < 2; i++) {
             initCalendars(i);
@@ -291,13 +292,13 @@ public class MainActivity extends AppCompatActivity {
         getContentResolver().insert(calendarUri, value);
     }
 
-    private void initCalendars() {
-        System.out.println("添加账号:185");
+    private void initDefaultCalendars() {
+        System.out.println("添加默认账号");
         TimeZone timeZone = TimeZone.getDefault();
         ContentValues value = new ContentValues();
-        value.put(Calendars.NAME, "185");
+        value.put(Calendars.NAME, "默认");
 
-        value.put(Calendars.ACCOUNT_NAME, "185185");
+        value.put(Calendars.ACCOUNT_NAME, "默认账号");
         value.put(Calendars.ACCOUNT_TYPE, "盒子鱼");
         value.put(Calendars.CALENDAR_DISPLAY_NAME, "我的闹钟");
         value.put(Calendars.VISIBLE, 1);
@@ -305,13 +306,13 @@ public class MainActivity extends AppCompatActivity {
         value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
         value.put(Calendars.SYNC_EVENTS, 1);
         value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
-        value.put(Calendars.OWNER_ACCOUNT, "185185");
+        value.put(Calendars.OWNER_ACCOUNT, "默认账号");
         value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
 
         Uri calendarUri = Calendars.CONTENT_URI;
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, "185185")
+                .appendQueryParameter(Calendars.ACCOUNT_NAME, "默认账号")
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, "盒子鱼")
                 .build();
 
@@ -339,13 +340,14 @@ public class MainActivity extends AppCompatActivity {
         boolean hasTen = false;
         for (userCursor.moveToFirst(); !userCursor.isAfterLast(); userCursor.moveToNext()) {
             String name = userCursor.getString(userCursor.getColumnIndex(Calendars.ACCOUNT_NAME));
+            String id = userCursor.getString(userCursor.getColumnIndex("_id"));
             if (AcountName[0].equals(name)) {
-                sevenEventID = userCursor.getString(userCursor.getColumnIndex("_id"));
+                sevenEventID = id;
                 System.out.println("已有账户：" + name + "的id是：" + sevenEventID);
                 hasSeven = true;
             }
             if (AcountName[1].equals(name)) {
-                tenEventID = userCursor.getString(userCursor.getColumnIndex("_id"));
+                tenEventID = id;
                 System.out.println("已有账户：" + name + "的id是：" + tenEventID);
                 hasTen = true;
             }
