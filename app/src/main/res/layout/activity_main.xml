@@ -29,35 +29,36 @@
         android:id="@+id/readUserButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
+        android:layout_marginTop="30dp"
         android:text="查看账户" />
 
     <Button
         android:id="@+id/readEventButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
+        android:layout_marginTop="30dp"
         android:text="查看事件" />
 
     <Button
         android:id="@+id/writeEventButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
+        android:layout_marginTop="30dp"
         android:text="插入事件" />
 
     <Button
         android:id="@+id/delEventOne"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
+        android:layout_marginTop="30dp"
         android:text="删除事件1" />
 
     <Button
         android:id="@+id/delEvenTwo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:onClick="onClick"
+        android:layout_marginTop="30dp"
+
         android:text="删除事件2" />
 
 </LinearLayout>
