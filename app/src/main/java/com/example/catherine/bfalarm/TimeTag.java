@@ -9,6 +9,24 @@ import java.io.Serializable;
 public class TimeTag implements Serializable {
     private String currentTime;
     private boolean isSun;
+    private String acountName;
+    private String calendarID;//用于存储事件ID
+
+    public String getCalendarID() {
+        return calendarID;
+    }
+
+    public void setCalendarID(String calendarID) {
+        this.calendarID = calendarID;
+    }
+
+    public String getAcountName() {
+        return acountName;
+    }
+
+    public void setAcountName(String acountName) {
+        this.acountName = acountName;
+    }
 
     public String getCurrentTime() {
         return currentTime;
@@ -31,6 +49,8 @@ public class TimeTag implements Serializable {
         return "TimeTag{" +
                 "currentTime='" + currentTime + '\'' +
                 ", isSun=" + isSun +
+                ", acountName='" + acountName + '\'' +
+                ", calendarID='" + calendarID + '\'' +
                 '}';
     }
 }

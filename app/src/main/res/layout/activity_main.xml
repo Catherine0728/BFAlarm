@@ -26,13 +26,6 @@
         android:text="初始化账户" />
 
     <Button
-        android:id="@+id/readUserButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="查看账户" />
-
-    <Button
         android:id="@+id/readEventButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

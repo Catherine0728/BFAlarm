@@ -31,18 +31,22 @@ public class MainActivity extends AppCompatActivity {
     private static String CALANDER_EVENT_URL = "content://com.android.calendar/events";
     private static String CALANDER_REMIDER_URL = "content://com.android.calendar/reminders";
 
-    String sevenEventID;
-    String tenEventID;
     String[] acountName = {"boxfish", "盒子鱼"};
     String[] alarmContent = {"嗨，同学，想知道今天有哪些好玩儿的任务吗？［坏笑］快点击进来看看吧～", "啊，已经10点啦，再不完成今天的任务就要睡觉咯～"};
     private String tag = "盒子鱼";
+    private List<TimeTag> allTimeTag;//用来存储连续七天的账户信息
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         requestPermission();
+        initView();
         setListener();
+    }
+
+    private void initView() {
+        allTimeTag = new ArrayList<>();
     }
 
     private void setListener() {
@@ -52,16 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 initAcount();
             }
         });
-
-        findViewById(R.id.readUserButton).
-
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        checkCurrentAcount();
-                    }
-                });
-
         findViewById(R.id.readEventButton).
 
                 setOnClickListener(new View.OnClickListener() {
@@ -129,7 +123,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (userName.contains(acountName[0])) {
                                     boolean hasCurrentEvent = false;
                                     TimeTag timeTag = getCurrentTime(iSeven);
-                                    String currentTime = timeTag.getCurrentTime();
                                     boolean isSun = timeTag.isSun();
                                     if (name == 1 || isSun) {
                                         iSeven++;
@@ -138,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                                     int eventCount = eventCursor.getCount();
                                     if (eventCount > 0) {
                                         for (eventCursor.moveToFirst(); !eventCursor.isAfterLast(); eventCursor.moveToNext()) {
-                                            String title = eventCursor.getString(eventCursor.getColumnIndex("title"));
                                             String calendarId = eventCursor.getString(eventCursor.getColumnIndex("calendar_id"));
                                             System.out.println(calendarId);
                                             if (calendarId.equals(calId)) {
@@ -149,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
                                         if (hasCurrentEvent) {
                                             iSeven++;
                                         } else {
-                                            System.out.println("7-1已经存在这些账户：" + userName + "===calId: " + calId);
-                                            contentValues.put("title", currentTime + acountName[0]);
+                                            System.out.println("7-1需要添加事件的账户：" + userName + "===calId: " + calId);
+                                            contentValues.put("title", acountName[0]);
                                             contentValues.put("description", alarmContent[0]);
                                             // 插入账户
                                             contentValues.put("calendar_id", calId);
@@ -198,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
                                             iSeven++;
                                         }
                                     } else {
-                                        System.out.println("7-2已经存在这些账户：" + userName + "===calId: " + calId);
-                                        contentValues.put("title", currentTime + acountName[0]);
+                                        System.out.println("7-2需要添加事件的账户：" + userName + "===calId: " + calId);
+                                        contentValues.put("title", acountName[0]);
                                         contentValues.put("description", alarmContent[0]);
                                         // 插入账户
                                         contentValues.put("calendar_id", calId);
@@ -248,21 +240,15 @@ public class MainActivity extends AppCompatActivity {
                                     }
 
                                 } else if (userName.contains(acountName[1])) {//如果有10点
-                                    TimeTag timeTag = getCurrentTime(iTen);
-                                    String currentTime = timeTag.getCurrentTime();
-                                    if (!userName.contains(currentTime)) {
-                                        iTen++;
-                                    }
                                     boolean hasCurrentEvent = false;
+                                    TimeTag timeTag = getCurrentTime(iTen);
                                     boolean isSun = timeTag.isSun();
                                     if (name == 1 || isSun) {
                                         iTen++;
                                         continue;
                                     }
-                                    System.out.println(timeTag + "====" + name);
                                     if (eventCursor.getCount() > 0) {
                                         for (eventCursor.moveToFirst(); !eventCursor.isAfterLast(); eventCursor.moveToNext()) {
-                                            String title = eventCursor.getString(eventCursor.getColumnIndex("title"));
                                             String calendarId = eventCursor.getString(eventCursor.getColumnIndex("calendar_id"));
                                             if (calendarId.equals(calId)) {
                                                 hasCurrentEvent = true;
@@ -273,21 +259,13 @@ public class MainActivity extends AppCompatActivity {
                                             iTen++;
                                         } else {
                                             System.out.println("10-1已经存在这些账户：" + userName + "===calId: " + calId);
-                                            contentValues.put("title", currentTime + acountName[1]);
+                                            contentValues.put("title",  acountName[1]);
                                             contentValues.put("description", alarmContent[1]);
                                             // 插入账户
                                             contentValues.put("calendar_id", calId);
                                             contentValues.put("eventLocation", "北京");
 
                                             Calendar mCalendar = Calendar.getInstance();
-//                                        String[] strTime = getCurrentTimeStr(name);
-//                                        mCalendar.set(Integer.valueOf(strTime[0]), Integer.valueOf(strTime[1]), Integer.valueOf(strTime[2]), 22, 0);
-////
-//                                        long start = mCalendar.getTimeInMillis();
-//                                        Calendar endCalendar = Calendar.getInstance();
-//                                        endCalendar.set(Integer.valueOf(strTime[0]), Integer.valueOf(strTime[1]), Integer.valueOf(strTime[2]), 22, 1);
-////
-//                                        long end = endCalendar.getTimeInMillis();
                                             mCalendar.setTimeInMillis(System.currentTimeMillis());
                                             mCalendar.add(Calendar.DAY_OF_MONTH, iTen);
                                             mCalendar.set(Calendar.HOUR_OF_DAY, 22);
@@ -332,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     } else {
                                         System.out.println("10-2已经存在这些账户：" + userName + "===calId: " + calId);
-                                        contentValues.put("title", currentTime + acountName[1]);
+                                        contentValues.put("title", acountName[1]);
                                         contentValues.put("description", alarmContent[1]);
                                         // 插入账户
                                         contentValues.put("calendar_id", calId);
@@ -396,15 +374,10 @@ public class MainActivity extends AppCompatActivity {
                 setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-//                //// TODO: 17/3/22 三星崩溃的解决
-                        TimeTag timeTag = getCurrentTime(0);
-                        String currentTime = timeTag.getCurrentTime();
-                        if (currentTime == null) return;
-//                                //删除事件
-                        int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==" + sevenEventID, null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
-//                        int rownum = getContentResolver().delete(Uri.parse(CALANDER_EVENT_URL), Calendars.ACCOUNT_NAME +"="+ AcountName[0], null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
-//                                //可以令_id=你添加账户的id，以此删除你添加的账户
-                        System.out.println(rownum < 0 || sevenEventID == null || sevenEventID.equals("-1") ? "没有可删除的" : "删除了:id为" + sevenEventID + "的" + currentTime + acountName[0]);
+                        String eventId = checkCurrentAcount(0);
+                        if (eventId == null || eventId.equals("")) return;
+                        int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==" + eventId, null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
+                        System.out.println(rownum < 0 ? "没有可删除的" : "删除了:id为" + eventId + "的" + acountName[0]);
 
                     }
                 });
@@ -414,13 +387,10 @@ public class MainActivity extends AppCompatActivity {
                 setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        TimeTag timeTag = getCurrentTime(0);
-                        String currentTime = timeTag.getCurrentTime();
-                        if (currentTime == null) return;
-                        //删除事件
-                        int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==" + tenEventID, null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
-                        //可以令_id=你添加账户的id，以此删除你添加的账户
-                        System.out.println(rownum < 0 || tenEventID == null || tenEventID.equals("-1") ? "没有可删除的" : "删除了:id为" + tenEventID + "的" + currentTime + acountName[1]);
+                        String eventId = checkCurrentAcount(1);
+                        if (eventId == null || eventId.equals("")) return;
+                        int rownum = getContentResolver().delete(Uri.parse(CALANDER_URL), "_id==" + eventId, null);  //注意：会全部删除所有账户，新添加的账户一般从id=1开始，
+                        System.out.println(rownum < 0 ? "没有可删除的" : "删除了:id为" + eventId + "的" + acountName[0]);
 
                     }
 
@@ -447,77 +417,54 @@ public class MainActivity extends AppCompatActivity {
 
         //添加日历账户
         for (int i = 0; i < 7; i++) {
-            initSevenCalendars(i);
-            initTenCalendars(i);
+            for (int j = 0; j < 2; j++) {
+                initCalendars(i, j);
+            }
         }
     }
 
 
-    //添加账户
-
-
-    private void initSevenCalendars(int i) {
+    /**
+     * 添加账户
+     *
+     * @param i:表示每一天
+     * @param hour：每一天的几点
+     */
+    private void initCalendars(int i, int hour) {
         TimeTag timeTag = getCurrentTime(i);
         String currentTime = timeTag.getCurrentTime();
         boolean isSun = timeTag.isSun();
-        if (Utils.isEmpty(currentTime)) return;
-        System.out.println("添加" + i + "天后的账号:" + currentTime + acountName[0]);
+        String singleAcountName = currentTime + acountName[hour];//得到晚上hour点单个账户名字
+        timeTag.setAcountName(singleAcountName);
+        allTimeTag.add(timeTag);
         TimeZone timeZone = TimeZone.getDefault();
         ContentValues value = new ContentValues();
         value.put(Calendars.NAME, isSun);
 
-        value.put(Calendars.ACCOUNT_NAME, currentTime + acountName[0]);
+        value.put(Calendars.ACCOUNT_NAME, singleAcountName);
         value.put(Calendars.ACCOUNT_TYPE, tag);
         value.put(Calendars.CALENDAR_DISPLAY_NAME, tag);
         value.put(Calendars.VISIBLE, 1);
-        value.put(Calendars.CALENDAR_COLOR, -00000000);
+        value.put(Calendars.CALENDAR_COLOR, -9206951);
         value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
         value.put(Calendars.SYNC_EVENTS, 0);
         value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
-        value.put(Calendars.OWNER_ACCOUNT, currentTime + acountName[0]);
+        value.put(Calendars.OWNER_ACCOUNT, acountName[hour]);
         value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
 
         Uri calendarUri = Calendars.CONTENT_URI;
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, currentTime + acountName[0])
+                .appendQueryParameter(Calendars.ACCOUNT_NAME, singleAcountName)
                 .appendQueryParameter(Calendars.ACCOUNT_TYPE, tag)
                 .build();
 
         getContentResolver().insert(calendarUri, value);
     }
 
-    private void initTenCalendars(int i) {
-        TimeTag timeTag = getCurrentTime(i);
-        boolean isSun = timeTag.isSun();
-        String currentTime = timeTag.getCurrentTime();
-        if (Utils.isEmpty(currentTime)) return;
-        System.out.println("添加" + i + "天后的账号:" + currentTime + acountName[1]);
-        TimeZone timeZone = TimeZone.getDefault();
-        ContentValues value = new ContentValues();
-        value.put(Calendars.NAME, isSun);
-
-        value.put(Calendars.ACCOUNT_NAME, currentTime + acountName[1]);
-        value.put(Calendars.ACCOUNT_TYPE, "盒子鱼");
-        value.put(Calendars.CALENDAR_DISPLAY_NAME, currentTime + acountName[1]);
-        value.put(Calendars.VISIBLE, 1);
-        value.put(Calendars.CALENDAR_COLOR, -99999999);
-        value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
-        value.put(Calendars.SYNC_EVENTS, 0);
-        value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
-        value.put(Calendars.OWNER_ACCOUNT, currentTime + acountName[1]);
-        value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
-
-        Uri calendarUri = Calendars.CONTENT_URI;
-        calendarUri = calendarUri.buildUpon()
-                .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, currentTime + acountName[1])
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "盒子鱼")
-                .build();
-
-        getContentResolver().insert(calendarUri, value);
-    }
-
+    /**
+     * 创建一个默认的账户，三星如果在删除所有账户后，可能会导致崩溃
+     */
     private void initDefaultCalendars() {
         TimeZone timeZone = TimeZone.getDefault();
         ContentValues value = new ContentValues();
@@ -576,7 +523,6 @@ public class MainActivity extends AppCompatActivity {
             if (hasEvent) {
 //                String userName1 = userCursor.getString(userCursor.getColumnIndex(Calendars.NAME));
 //                String userName0 = userCursor.getString(userCursor.getColumnIndex(Calendars.ACCOUNT_NAME));
-//                System.out.println("NAME&&:ACCOUNT_NAME " + userName1 + " -- ACCOUNT_NAME: " + userName0);
                 System.out.println("已有账户：" + name + "的id是：" + id);
 
 
@@ -584,12 +530,12 @@ public class MainActivity extends AppCompatActivity {
         }
         if (sevenEvent < 7) {
             for (int i = sevenEvent; i < 7; i++) {
-                initSevenCalendars(i);
+                initCalendars(i, 0);
             }
         }
         if (tenEvent < 7) {
             for (int i = tenEvent; i < 7; i++) {
-                initTenCalendars(i);
+                initCalendars(i, 1);
             }
         }
 
@@ -598,33 +544,30 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 检查当天的日历
+     *
+     * @param i 每天有两个提醒
+     *          0，就是查看七点
+     *          1，就是查看十点
      */
-    private void checkCurrentAcount() {
-        sevenEventID = "-1";
-        tenEventID = "-1";
-        TimeTag timeTag = getCurrentTime(0);
-        String currentTime = timeTag.getCurrentTime();
-        if (currentTime == null) return;
+    private String checkCurrentAcount(int i) {
+        String eventID = null;
+        TimeTag timeReminder = getCurrentTime(0);
+        String currentTime = timeReminder.getCurrentTime();
         //读取系统日历账户，如果为0的话先添加
         Cursor userCursor = getContentResolver().query(Uri.parse(CALANDER_URL), null, null, null, null);
         int count = userCursor.getCount();
-
-        System.out.println("Count: " + count);
+        System.out.println(count);
         for (userCursor.moveToFirst(); !userCursor.isAfterLast(); userCursor.moveToNext()) {
-            String name = userCursor.getString(userCursor.getColumnIndex(Calendars.ACCOUNT_NAME));
+            String name = userCursor.getString(userCursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME));
             String id = userCursor.getString(userCursor.getColumnIndex("_id"));
-            String currentSevenAcountName = currentTime + acountName[0];
-            String currentTenAcountName = currentTime + acountName[1];
-            if (name.equals(currentSevenAcountName)) {
-                sevenEventID = id;
-                System.out.println("已有账户：" + name + "的id是：" + sevenEventID);
-            }
-            if (name.equals(currentTenAcountName)) {
-                tenEventID = id;
-                System.out.println("已有账户：" + name + "的id是：" + tenEventID);
+            String currentAcountName = currentTime + acountName[i];
+            if (name.equals(currentAcountName)) {
+                eventID = id;
+                System.out.println("已有账户：" + name + "的id是：" + eventID);
             }
         }
 
+        return eventID;
     }
 
     private void requestPermission() {
@@ -679,11 +622,5 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-
-    private String[] getCurrentTimeStr(String acountName) {
-        String[] str = acountName.split("-");
-        return str;
-    }
-
 
 }
