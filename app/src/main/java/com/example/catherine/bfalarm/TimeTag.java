@@ -45,6 +45,16 @@ public class TimeTag implements Serializable {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        String current = (String) obj;
+        if (current.equals(getAcountName())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public String toString() {
         return "TimeTag{" +
                 "currentTime='" + currentTime + '\'' +
