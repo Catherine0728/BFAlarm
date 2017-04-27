@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     private List<String> allColumns;
     private List<String> allColumns2;
     private List<String> allColumns3;
+    private List<String> allColumnsUser1;//得到账户
+    private List<String> allColumnsUser2;//得到账户
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
         allColumns = new ArrayList<>();
         allColumns2 = new ArrayList<>();
         allColumns3 = new ArrayList<>();
+        allColumnsUser1 = new ArrayList<>();
+        allColumnsUser2 = new ArrayList<>();
     }
 
     private void setListener() {
@@ -58,6 +62,40 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 initAcount();
+            }
+        });
+        findViewById(R.id.checkButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //读取系统日历账户
+                Cursor userCursor = getContentResolver().query(Uri.parse(CALANDER_URL), null, null, null, null);
+                int count = userCursor.getCount();
+                if (count > 0) {
+                    for (userCursor.moveToFirst(); !userCursor.isAfterLast(); userCursor.moveToNext()) {
+                        allColumnsUser1.clear();
+                        allColumnsUser2.clear();
+                        String diaplayName = userCursor.getString(userCursor.getColumnIndex(CalendarContract.Events.CALENDAR_DISPLAY_NAME));
+                        System.out.println(diaplayName);
+                        if (diaplayName.contains("盒子鱼")) {
+                            String[] columnnames1 = userCursor.getColumnNames();
+                            for (String s : columnnames1
+                                    ) {
+                                allColumnsUser1.add(s + "==" + userCursor.getString(userCursor.getColumnIndex(s)));
+                            }
+                        } else {
+                            String[] columnnames2 = userCursor.getColumnNames();
+                            for (String s : columnnames2
+                                    ) {
+                                allColumnsUser2.add(s + "==" + userCursor.getString(userCursor.getColumnIndex(s)));
+                            }
+                        }
+                        System.out.println("allColumnsUser1==>" + allColumnsUser1);
+                        System.out.println("allColumnsUser2==>" + allColumnsUser2);
+                    }
+
+
+                }
+
             }
         });
         findViewById(R.id.readEventButton).
@@ -181,6 +219,10 @@ public class MainActivity extends AppCompatActivity {
                                             contentValues.put("description", alarmContent[0]);
                                             // 插入账户
                                             contentValues.put("calendar_id", calId);
+                                            contentValues.put("latitude", 0);
+                                            contentValues.put("longitude", 0);
+                                            contentValues.put("eventStatus", 0);
+                                            contentValues.put("availabilityStatus", 2);
 //                                            contentValues.put("eventLocation", "北京");
 
                                             Calendar mCalendar = Calendar.getInstance();
@@ -200,6 +242,10 @@ public class MainActivity extends AppCompatActivity {
                                             contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, timeZoneID);  //这个是时区，必须有，
                                             contentValues.put(CalendarContract.Events.STATUS, 1);
                                             contentValues.put(CalendarContract.Events.GUESTS_CAN_MODIFY, 0);
+                                            contentValues.put(CalendarContract.Events.HAS_ATTENDEE_DATA, 1);
+                                            contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, 1);
+                                            contentValues.put(CalendarContract.Events.HAS_ATTENDEE_DATA, 1);
+
 
                                             //添加事件
                                             Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
@@ -233,6 +279,10 @@ public class MainActivity extends AppCompatActivity {
                                         contentValues.put("description", alarmContent[0]);
                                         // 插入账户
                                         contentValues.put("calendar_id", calId);
+                                        contentValues.put("latitude", 0);
+                                        contentValues.put("longitude", 0);
+                                        contentValues.put("eventStatus", 0);
+                                        contentValues.put("availabilityStatus", 2);
 //                                        contentValues.put("eventLocation", "北京");
 
                                         Calendar mCalendar = Calendar.getInstance();
@@ -246,7 +296,8 @@ public class MainActivity extends AppCompatActivity {
 
                                         contentValues.put(CalendarContract.Events.DTSTART, start);
                                         contentValues.put(CalendarContract.Events.GUESTS_CAN_MODIFY, true);
-                                        contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, true);
+                                        contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, 1);
+                                        contentValues.put(CalendarContract.Events.HAS_ATTENDEE_DATA, 1);
 
 
 //                                        contentValues.put(CalendarContract.Events.RRULE, "FREQ=WEEKLY;WKST=SU;BYDAY=MO,TU,WE,TH,FR,SA");
@@ -306,6 +357,10 @@ public class MainActivity extends AppCompatActivity {
                                             // 插入账户
                                             contentValues.put("calendar_id", calId);
                                             contentValues.put("eventLocation", "北京");
+                                            contentValues.put("latitude", 0);
+                                            contentValues.put("longitude", 0);
+                                            contentValues.put("eventStatus", 0);
+                                            contentValues.put("availabilityStatus", 2);
 
                                             Calendar mCalendar = Calendar.getInstance();
                                             mCalendar.setTimeInMillis(System.currentTimeMillis());
@@ -324,6 +379,10 @@ public class MainActivity extends AppCompatActivity {
                                             contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, timeZoneID);  //这个是时区，必须有，
                                             contentValues.put(CalendarContract.Events.GUESTS_CAN_MODIFY, false);
                                             contentValues.put(CalendarContract.Events.STATUS, 1);
+                                            contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, 1);
+                                            contentValues.put(CalendarContract.Events.HAS_ATTENDEE_DATA, 1);
+
+
                                             //添加事件
                                             Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
                                             if (newEvent == null) {
@@ -358,6 +417,10 @@ public class MainActivity extends AppCompatActivity {
                                         // 插入账户
                                         contentValues.put("calendar_id", calId);
 //                                        contentValues.put("eventLocation", "北京");
+                                        contentValues.put("latitude", 0);
+                                        contentValues.put("longitude", 0);
+                                        contentValues.put("eventStatus", 0);
+                                        contentValues.put("availabilityStatus", 2);
 
                                         Calendar mCalendar = Calendar.getInstance();
                                         mCalendar.setTimeInMillis(System.currentTimeMillis());
@@ -375,7 +438,9 @@ public class MainActivity extends AppCompatActivity {
                                         contentValues.put(CalendarContract.Events.EVENT_TIMEZONE, timeZoneID);  //这个是时区，必须有，
                                         contentValues.put(CalendarContract.Events.STATUS, 1);
                                         contentValues.put(CalendarContract.Events.GUESTS_CAN_MODIFY, false);
-                                        contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, false);
+                                        contentValues.put(CalendarContract.Events.GUESTS_CAN_SEE_GUESTS, 1);
+                                        contentValues.put(CalendarContract.Events.HAS_ATTENDEE_DATA, 1);
+
 
                                         //添加事件
                                         Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
@@ -499,10 +564,9 @@ public class MainActivity extends AppCompatActivity {
 
         value.put(Calendars.ACCOUNT_NAME, singleAcountName);
         value.put(Calendars.ACCOUNT_TYPE, "LOCAL");
-        value.put(Calendars.CALENDAR_DISPLAY_NAME, "");
+        value.put(Calendars.CALENDAR_DISPLAY_NAME, "盒子鱼name");
         value.put(Calendars.VISIBLE, 1);
         value.put(Calendars.CALENDAR_COLOR, -99999999);
-        value.put(Calendars.CAN_ORGANIZER_RESPOND,1);
         value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
         value.put(Calendars.SYNC_EVENTS, 1);
         value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
@@ -512,7 +576,7 @@ public class MainActivity extends AppCompatActivity {
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
                 .appendQueryParameter(Calendars.ACCOUNT_NAME, singleAcountName)
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "ACCOUNT_TYPE")
+                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "LOCAL")
                 .build();
 
         getContentResolver().insert(calendarUri, value);
@@ -526,22 +590,21 @@ public class MainActivity extends AppCompatActivity {
         ContentValues value = new ContentValues();
         value.put(Calendars.NAME, "默认");
 
-        value.put(Calendars.ACCOUNT_NAME, "默认账号");
-        value.put(Calendars.ACCOUNT_TYPE, "ACCOUNT_TYPE");
-        value.put(Calendars.CALENDAR_DISPLAY_NAME, "CALENDAR_DISPLAY_NAME");
+        value.put(Calendars.ACCOUNT_NAME, "盒子鱼");
+        value.put(Calendars.ACCOUNT_TYPE, "LOCAL");
+        value.put(Calendars.CALENDAR_DISPLAY_NAME, "盒子鱼name");
         value.put(Calendars.VISIBLE, 1);
         value.put(Calendars.CALENDAR_COLOR, 00000000);
         value.put(Calendars.CALENDAR_ACCESS_LEVEL, Calendars.CAL_ACCESS_OWNER);
         value.put(Calendars.SYNC_EVENTS, 1);
         value.put(Calendars.CALENDAR_TIME_ZONE, timeZone.getID());
         value.put(Calendars.OWNER_ACCOUNT, "默认账号");
-        value.put(Calendars.CAN_ORGANIZER_RESPOND, 0);
 
         Uri calendarUri = Calendars.CONTENT_URI;
         calendarUri = calendarUri.buildUpon()
                 .appendQueryParameter(CalendarContract.CALLER_IS_SYNCADAPTER, "true")
-                .appendQueryParameter(Calendars.ACCOUNT_NAME, "默认账号")
-                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "ACCOUNT_TYPE")
+                .appendQueryParameter(Calendars.ACCOUNT_NAME, "盒子鱼")
+                .appendQueryParameter(Calendars.ACCOUNT_TYPE, "LOCAL")
                 .build();
 
         getContentResolver().insert(calendarUri, value);
