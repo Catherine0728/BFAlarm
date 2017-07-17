@@ -6,25 +6,23 @@ import android.content.ContentValues;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import android.provider.CalendarContract.Calendars;
-
-import java.util.Calendar;
-
-public class MainActivity extends AppCompatActivity {
+public class MainTwoActivity extends AppCompatActivity {
     //Android2.2版本以后的URL，之前的就不写了
 
     private static String CALANDER_URL = "content://com.android.calendar/calendars";
@@ -151,10 +149,10 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println(size2);
                             System.out.println(size3);
                         } else {
-                            Toast.makeText(MainActivity.this, "请先添加事件!!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainTwoActivity.this, "请先添加事件!!!", Toast.LENGTH_SHORT).show();
                         }
                         if (!hasEvent) {
-                            Toast.makeText(MainActivity.this, "请先添加事件!!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainTwoActivity.this, "请先添加事件!!!", Toast.LENGTH_SHORT).show();
 
                         }
 
@@ -195,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                                 ContentValues contentValues = new ContentValues();
                                 if (userName.contains(alarmContent[0])) {
                                     boolean hasCurrentEvent = false;
-                                    TimeTag timeTag = getCurrentTime(iSeven);
+                                    TimeTag timeTag = getCurrentTime(iSeven,false);
                                     boolean isSun = timeTag.isSun();
                                     if (name == 1 || isSun) {
                                         iSeven++;
@@ -251,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                                             Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
                                             if (newEvent == null) {
                                                 //添加日历事件失败直接返回
-                                                Toast.makeText(MainActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
 
@@ -266,10 +264,10 @@ public class MainActivity extends AppCompatActivity {
                                             Uri uriNew = getContentResolver().insert(Uri.parse(CALANDER_REMIDER_URL), values);
                                             if (uriNew == null) {
                                                 //添加闹钟提醒失败直接返回
-                                                Toast.makeText(MainActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
                                                 return;
                                             } else {
-                                                Toast.makeText(MainActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
                                             }
                                             iSeven++;
                                         }
@@ -287,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
 
                                         Calendar mCalendar = Calendar.getInstance();
                                         mCalendar.setTimeInMillis(System.currentTimeMillis());
-                                        mCalendar.add(Calendar.DAY_OF_MONTH, iSeven);
+                                        mCalendar.add(Calendar.DAY_OF_MONTH, iSeven == 0 ? iSeven + 3 : iSeven + 5);
                                         mCalendar.set(Calendar.HOUR_OF_DAY, 19);
                                         mCalendar.set(Calendar.MINUTE, 0);
                                         long start = mCalendar.getTime().getTime();
@@ -309,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                                         Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
                                         if (newEvent == null) {
                                             //添加日历事件失败直接返回
-                                            Toast.makeText(MainActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
@@ -324,17 +322,17 @@ public class MainActivity extends AppCompatActivity {
                                         Uri uriNew = getContentResolver().insert(Uri.parse(CALANDER_REMIDER_URL), values);
                                         if (uriNew == null) {
                                             //添加闹钟提醒失败直接返回
-                                            Toast.makeText(MainActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
                                             return;
                                         } else {
-                                            Toast.makeText(MainActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
                                         }
                                         iSeven++;
                                     }
 
                                 } else if (userName.contains(alarmContent[1])) {//如果有10点
                                     boolean hasCurrentEvent = false;
-                                    TimeTag timeTag = getCurrentTime(iTen);
+                                    TimeTag timeTag = getCurrentTime(iTen,false);
                                     boolean isSun = timeTag.isSun();
                                     if (name == 1 || isSun) {
                                         iTen++;
@@ -387,7 +385,7 @@ public class MainActivity extends AppCompatActivity {
                                             Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
                                             if (newEvent == null) {
                                                 //添加日历事件失败直接返回
-                                                Toast.makeText(MainActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
                                                 return;
                                             }
 
@@ -402,10 +400,10 @@ public class MainActivity extends AppCompatActivity {
                                             Uri uriNew = getContentResolver().insert(Uri.parse(CALANDER_REMIDER_URL), values);
                                             if (uriNew == null) {
                                                 //添加闹钟提醒失败直接返回
-                                                Toast.makeText(MainActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
                                                 return;
                                             } else {
-                                                Toast.makeText(MainActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(MainTwoActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
                                             }
                                             iTen++;
 
@@ -446,7 +444,7 @@ public class MainActivity extends AppCompatActivity {
                                         Uri newEvent = getContentResolver().insert(Uri.parse(CALANDER_EVENT_URL), contentValues);
                                         if (newEvent == null) {
                                             //添加日历事件失败直接返回
-                                            Toast.makeText(MainActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "添加失败!!!", Toast.LENGTH_SHORT).show();
                                             return;
                                         }
 
@@ -461,10 +459,10 @@ public class MainActivity extends AppCompatActivity {
                                         Uri uriNew = getContentResolver().insert(Uri.parse(CALANDER_REMIDER_URL), values);
                                         if (uriNew == null) {
                                             //添加闹钟提醒失败直接返回
-                                            Toast.makeText(MainActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "插入事件失败!!!", Toast.LENGTH_SHORT).show();
                                             return;
                                         } else {
-                                            Toast.makeText(MainActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainTwoActivity.this, "插入事件成功!!!", Toast.LENGTH_SHORT).show();
                                         }
                                         iTen++;
                                     }
@@ -473,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         } else {
-                            Toast.makeText(MainActivity.this, "没有账户，请先添加账户", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainTwoActivity.this, "没有账户，请先添加账户", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
@@ -528,8 +526,8 @@ public class MainActivity extends AppCompatActivity {
         initDefaultCalendars();
 
         //添加日历账户
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 2; j++) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 1; j++) {
                 initCalendars(i, j);
             }
         }
@@ -543,9 +541,10 @@ public class MainActivity extends AppCompatActivity {
      * @param hour：每一天的几点
      */
     private void initCalendars(int i, int hour) {
-        TimeTag timeTag = getCurrentTime(i);
+        System.out.println(i);
+        TimeTag timeTag = getCurrentTime(i,false);
+        if (timeTag == null) return;
         String currentTime = timeTag.getCurrentTime();
-        System.out.println(currentTime);
         boolean isSun = timeTag.isSun();
         String singleAcountName = currentTime + alarmContent[hour];//得到晚上hour点单个账户名字
         timeTag.setAcountName(singleAcountName);
@@ -643,21 +642,21 @@ public class MainActivity extends AppCompatActivity {
             if (hasEvent) {
 //                String userName1 = userCursor.getString(userCursor.getColumnIndex(Calendars.NAME));
 //                String userName0 = userCursor.getString(userCursor.getColumnIndex(Calendars.ACCOUNT_NAME));
-                System.out.println("已有账户：" + name + "的id是：" + id);
+                System.out.println(sevenEvent + "已有账户：" + name + "的id是：" + id);
 
 
             }
         }
-        if (sevenEvent < 7) {
-            for (int i = sevenEvent; i < 7; i++) {
+        if (sevenEvent < 2) {
+            for (int i = sevenEvent; i < 2; i++) {
                 initCalendars(i, 0);
             }
         }
-        if (tenEvent < 7) {
-            for (int i = tenEvent; i < 7; i++) {
-                initCalendars(i, 1);
-            }
-        }
+//        if (tenEvent < 7) {
+//            for (int i = tenEvent; i < 7; i++) {
+//                initCalendars(i, 1);
+//            }
+//        }
 
 
     }
@@ -671,14 +670,14 @@ public class MainActivity extends AppCompatActivity {
      */
     private String checkCurrentAcount(int i) {
         String eventID = null;
-        TimeTag timeReminder = getCurrentTime(0);
+        TimeTag timeReminder = getCurrentTime(0,true);
         String currentTime = timeReminder.getCurrentTime();
         //读取系统日历账户，如果为0的话先添加
         Cursor userCursor = getContentResolver().query(Uri.parse(CALANDER_URL), null, null, null, null);
         int count = userCursor.getCount();
         System.out.println(count);
         for (userCursor.moveToFirst(); !userCursor.isAfterLast(); userCursor.moveToNext()) {
-            String name = userCursor.getString(userCursor.getColumnIndex(CalendarContract.Calendars.ACCOUNT_NAME));
+            String name = userCursor.getString(userCursor.getColumnIndex(Calendars.ACCOUNT_NAME));
             String id = userCursor.getString(userCursor.getColumnIndex("_id"));
             String currentAcountName = currentTime + alarmContent[i];
             if (name.equals(currentAcountName)) {
@@ -706,7 +705,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private TimeTag getCurrentTime(int i) {
+    private TimeTag getCurrentTime(int i, boolean isDelete) {
         TimeTag timeTag = new TimeTag();
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         Calendar c = Calendar.getInstance();
@@ -714,22 +713,23 @@ public class MainActivity extends AppCompatActivity {
 
         String time = sf.format(c.getTime());
         long currentTimeMillis = c.getTime().getTime();//得到当前的date值
-        if (i == 0) {
-            timeTag.setCurrentTime(time);
-            if (isSun(currentTimeMillis)) {
-                timeTag.setSun(true);
-                return timeTag;
-            }
-            return timeTag;
-        }
-        c.add(Calendar.DAY_OF_MONTH, i);
+//        if (i == 0) {
+////            timeTag.setCurrentTime(time);
+////            if (isSun(currentTimeMillis)) {
+////                timeTag.setSun(true);
+////                return timeTag;
+////            }
+////            return timeTag;
+//            return null;//因为间隔三天的提醒不用区分周日，所以返回一个null就不往日历里面写数据了
+//        }
+        c.add(Calendar.DAY_OF_MONTH, isDelete ? i : i == 0 ? i + 3 : 1 + 5);
         time = sf.format(c.getTime());
         currentTimeMillis = c.getTime().getTime();//得到当前的date值
         timeTag.setCurrentTime(time);
-        if (isSun(currentTimeMillis)) {
-            timeTag.setSun(true);
-            return timeTag;
-        }
+//        if (isSun(currentTimeMillis)) {
+//            timeTag.setSun(true);
+//            return timeTag;
+//        }
         return timeTag;
     }
 
